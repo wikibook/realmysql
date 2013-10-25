@@ -1,0 +1,141 @@
+## ---------------------------------------------------------------------------------------------
+## [SERVER] MySQL Server Configuration
+## ---------------------------------------------------------------------------------------------
+[mysqld]
+## MySQL 서버 기본 옵션------------------------------------------------------------------------
+server-id                   = 1
+
+user                        = mysql
+port                        = 3306
+basedir                     = /usr/local/mysql
+datadir                     = /usr/local/mysql/data
+tmpdir                      = /usr/local/mysql/tmp
+socket                      = /usr/local/mysql/tmp/mysql.sock
+
+character-set-server        = utf8
+collation-server            = utf8_general_ci
+default-storage-engine      = InnoDB
+skip-name-resolve
+skip-external-locking
+
+## MySQL 스케줄러를 사용하려면 아래 event-scheduler 옵션을 ON으로 변경
+event-scheduler             = OFF
+sysdate-is-now
+
+back_log                    = 100
+max_connections             = 300
+max_connect_errors          = 999999
+thread_cache_size           = 50
+table_open_cache            = 400
+wait_timeout                = 28800
+
+max_allowed_packet          = 32M
+max_heap_table_size         = 32M
+tmp_table_size              = 512K
+
+sort_buffer_size            = 128K
+join_buffer_size            = 128K
+read_buffer_size            = 128K
+read_rnd_buffer_size        = 128K
+
+query_cache_size            = 32M
+query_cache_limit           = 2M
+
+group_concat_max_len        = 1024
+
+## 마스터 MySQL 서버에서 "레코드 기반 복제"를 사용할 대는 READ-COMMIT 사용 가능
+## 복제에 참여하지 않는 MySQL 서버에서는 READ-COMMIT 사용 가능
+## 그 외에는 반드시 REPEATABLE-READ로 사용
+transaction-isolation   = REPEATABLE-READ
+
+## InnoDB 플러그인 옵션 -----------------------------------------------------------------------
+innodb_use_sys_malloc       = 1
+innodb_stats_on_metadata    = 1
+innodb_stats_sample_pages   = 8
+innodb_max_dirty_pages_pct  = 90
+innodb_adaptive_hash_index  = 1
+innodb_file_format          = barracuda
+innodb_strict_mode          = 0
+innodb_io_capacity          = 600
+innodb_write_io_threads     = 4 
+innodb_read_io_threads      = 4
+innodb_autoinc_lock_mode    = 1
+innodb_adaptive_flushing    = 1
+innodb_change_buffering     = inserts
+innodb_old_blocks_time      = 500
+ignore_builtin_innodb
+## 아래의 plugin-load 설정(innodb 플러그인 라이브러리 목록까지 포함)은 
+## 반드시 한 줄에 모두 작성해야 함
+plugin-load=innodb=ha_innodb_plugin.so;innodb_trx=ha_innodb_plugin.so;innodb_locks=ha_innodb_plugin.so;innodb_lock_waits=ha_innodb_plugin.so;innodb_cmp=ha_innodb_plugin.so;innodb_cmp_reset=ha_innodb_plugin.so;innodb_cmpmem=ha_innodb_plugin.so;innodb_cmpmem_reset=ha_innodb_plugin.so
+
+## InnoDB 기본 옵션 ----------------------------------------------------------------------------
+## InnoDB를 사용하지 않는다면 innodb_buffer_pool_size를 최소화하거나 
+## InnoDB 스토리지 엔진을 기동하지 않도록 설정
+innodb_buffer_pool_size     = 10G
+innodb_additional_mem_pool_size = 16M
+innodb_file_per_table       = 1
+innodb_data_home_dir        = /usr/local/mysql/data
+innodb_data_file_path       = ib_system:100M:autoextend
+innodb_autoextend_increment = 100
+innodb_log_group_home_dir   = /usr/local/mysql/data
+innodb_log_buffer_size      = 16M
+innodb_log_file_size        = 1024M
+innodb_log_files_in_group   = 2
+innodb_support_xa           = OFF
+innodb_thread_concurrency   = 0
+innodb_lock_wait_timeout    = 60
+innodb_flush_log_at_trx_commit  = 1
+innodb_force_recovery       = 0
+innodb_flush_method         = O_DIRECT
+innodb_doublewrite          = 0
+innodb_sync_spin_loops      = 20
+innodb_table_locks          = 1
+innodb_thread_sleep_delay   = 1000
+innodb_max_purge_lag        = 0
+innodb_commit_concurrency   = 0
+innodb_concurrency_tickets  = 500
+
+
+## MyISAM 옵션  -------------------------------------------------------------------------------
+## InnoDB를 사용하지 않고 MyISAM만 사용한다면 key_buffer_size를 4GB까지 설정
+key_buffer_size             = 32M
+bulk_insert_buffer_size     = 32M
+myisam_sort_buffer_size     = 1M
+myisam_max_sort_file_size   = 2G
+myisam_repair_threads       = 1
+myisam_recover
+ft_min_word_len             = 3
+
+
+## 로깅 옵션 ----------------------------------------------------------------------------------
+pid-file                    = /usr/local/mysql/logs/mysqld.pid
+log-warnings               = 1
+log-error                   = /usr/local/mysql/logs/mysqld
+
+## General 로그를 사용하려면 아래 설정은 그대로 유지하고
+## MySQL 서버에 로그인한 후 "SET GLOBALgeneral_log=1" 명령으로 활성화
+general_log                 = 0
+general_log_file            = /usr/local/mysql/logs/general_query.log
+
+log_slow_admin_statements
+slow-query-log              = 1
+long_query_time             = 1
+slow_query_log_file         = /usr/local/mysql/logs/slow_query.log
+
+## 복제 옵션 -----------------------------------------------------------------------------------
+## 만약 현재 서버가 마스터 MySQL이라면 아래의 주석을 해제
+# log-bin                   = /usr/local/mysql/logs/binary_log
+# binlog_cache_size         = 128K
+# max_binlog_size           = 512M
+# expire_logs_days          = 14
+# log-bin-trust-function-creators = 1
+# sync_binlog               = 1
+
+## 현재 서버가 슬레이브 MySQL이라면 아래 주석을 해제
+# relay-log                   = /usr/local/mysql/logs/relay_log
+# relay_log_purge             = TRUE
+# read_only
+
+## 현재 서버가 슬레이브이면서 마스터 MySQL인 경우
+## 현재 MySQL 서버로 복제되는 쿼리를 바이너리 로그에 저장하려면 아래 주석을 해제
+# log-slave-updates

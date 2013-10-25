@@ -1,0 +1,29 @@
+shell> cd mysql-5.5.8
+shell> mkdir build_target 
+shell> cd build_target 
+shell> rm -rf *
+shell> cmake .. \
+  '-DCMAKE_INSTALL_PREFIX=/usr/local/mysql' \
+  '-DWITH_COMMENT=Toto mysql standard x86_64' \
+  '-DINSTALL_SBINDIR=/usr/local/mysql/bin' \
+  '-DINSTALL_BINDIR=/usr/local/mysql/bin' \
+  '-DINSTALL_LAYOUT=STANDALONE' \
+  '-DMYSQL_DATADIR=/usr/local/mysql/data' \
+  '-DSYSCONFDIR=/usr/local/mysql/etc' \
+  '-DINSTALL_SCRIPTDIR=/usr/local/mysql/bin' \
+  '-DWITH_INNOBASE_STORAGE_ENGINE=1' \
+  '-DWITH_ARCHIVE_STORAGE_ENGINE=1' \
+  '-DWITH_BLACKHOLE_STORAGE_ENGINE=1' \
+  '-DWITH_PERFSCHEMA_STORAGE_ENGINE=1' \
+  '-DWITH_FEDERATED_STORAGE_ENGINE=1' \
+  '-DWITH_PARTITION_STORAGE_ENGINE=1' \
+  '-DENABLE_DEBUG_SYNC=0' \
+  '-DENABLED_LOCAL_INFILE=1' \
+  '-DENABLED_PROFILING=1' \
+  '-DWITH_DEBUG=0' \
+  '-DWITH_LIBWRAP=0' \
+  '-DWITH_READLINE=1' \
+  '-DWITH_SSL=0' \
+  '-DCMAKE_BUILD_TYPE=RelWithDebInfo' \
+  '-DCMAKE_C_FLAGS=-O2' \
+  '-DCMAKE_CXX_FLAGS=-O2'

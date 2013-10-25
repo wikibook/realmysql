@@ -1,0 +1,21 @@
+./configure \
+    '--prefix=/usr/local/mysql'\
+    '--localstatedir=/usr/local/mysql/data'\
+    '--libexecdir=/usr/local/mysql/bin'\
+    '--with-comment=Toto mysql standard 32bit'\
+    '--with-server-suffix=-toto_standard'\
+    '--enable-thread-safe-client'\
+    '--enable-local-infile'\
+    '--enable-assembler'\
+    '--with-pic'\
+    '--with-fast-mutexes'\
+    '--with-client-ldflags=-static'\
+    '--with-mysqld-ldflags=-static'\
+    '--with-big-tables'\
+    '--with-readline'\
+    '--with-extra-charsets=complex'\
+¡¡¡¡'--with-plugins=partition,archive,blackhole,csv,heap,myisam,myisammrg,innodb_plugin'\
+    'CC=gcc' 'CXX=gcc' 'CFLAGS=-O2 -mcpu=i686'\
+    'CPPFLAGS=-I/usr/local/include' \
+    'CXXFLAGS=-O2 -mcpu=i686 -felide-constructors'\
+    'LDFLAGS=-L/usr/local/lib'
